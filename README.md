@@ -1,6 +1,6 @@
 # clinico
 
-A new Flutter project.
+A flutter project to manage clinics
 
 ## Getting Started
 
