@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/patient.dart';
 import '../providers/patient_provider.dart';
 import '../theme/app_theme.dart';
@@ -84,6 +85,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: Text('Settings'),
               ),
             ],
+            trailing: Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: _buildDonateButton(context),
+                ),
+              ),
+            ),
           ),
           const VerticalDivider(width: 1),
           // Main Content
@@ -425,5 +435,37 @@ class _HomeScreenState extends State<HomeScreen> {
     ).then((_) {
       context.read<PatientProvider>().loadRecentPatients();
     });
+  }
+
+  Widget _buildDonateButton(BuildContext context) {
+    final isExtended = MediaQuery.of(context).size.width > 1200;
+
+    if (isExtended) {
+      return TextButton.icon(
+        onPressed: _launchDonateUrl,
+        icon: const Icon(Icons.favorite, color: Colors.pinkAccent),
+        label: const Text(
+          'Sponsor',
+          style: TextStyle(color: Colors.pinkAccent),
+        ),
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      );
+    }
+
+    return IconButton(
+      onPressed: _launchDonateUrl,
+      icon: const Icon(Icons.favorite, color: Colors.pinkAccent),
+      tooltip: 'Sponsor on GitHub',
+    );
+  }
+
+  Future<void> _launchDonateUrl() async {
+    // TODO: Replace 'YOUR_GITHUB_USERNAME' with your actual GitHub username
+    final Uri url = Uri.parse('https://buymeacoffee.com/Mustafaqe');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch $url');
+    }
   }
 }

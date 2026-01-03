@@ -419,9 +419,8 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
       if (_isEditing) {
         final updatedPatient = widget.patient!.copyWith(
           fullName: _fullNameController.text,
-          phone: _phoneController.text.isNotEmpty
-              ? _phoneController.text
-              : null,
+          phone:
+              _phoneController.text.isNotEmpty ? _phoneController.text : null,
           address: _addressController.text.isNotEmpty
               ? _addressController.text
               : null,
@@ -463,9 +462,8 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
       } else {
         final newPatient = await provider.addPatient(
           fullName: _fullNameController.text,
-          phone: _phoneController.text.isNotEmpty
-              ? _phoneController.text
-              : null,
+          phone:
+              _phoneController.text.isNotEmpty ? _phoneController.text : null,
           address: _addressController.text.isNotEmpty
               ? _addressController.text
               : null,
@@ -522,25 +520,33 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   void _confirmDelete() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Patient'),
         content: Text(
           'Are you sure you want to delete "${widget.patient!.fullName}"? This action cannot be undone.',
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
-              Navigator.pop(context);
+              // Close the dialog first
+              Navigator.pop(dialogContext);
+
+              // Delete the patient
               await context.read<PatientProvider>().deletePatient(
-                widget.patient!.id,
-              );
+                    widget.patient!.id,
+                  );
+
+              // Pop back to the patient list (go back through patient detail and form screens)
               if (mounted) {
-                Navigator.pop(context);
-                Navigator.pop(context);
+                // Pop the form screen
+                Navigator.of(context).pop();
+                // Pop the detail screen if we came through it
+                Navigator.of(context).popUntil((route) =>
+                    route.isFirst || route.settings.name == '/patients');
               }
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),

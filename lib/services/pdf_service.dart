@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import '../models/patient.dart';
 import '../models/prescription.dart';
 import '../models/visit.dart';
@@ -29,7 +32,7 @@ class PdfService {
     );
   }
 
-  Future<void> sharePrescription({
+  Future<String?> sharePrescription({
     required Patient patient,
     required Visit visit,
     required Prescription prescription,
@@ -44,11 +47,24 @@ class PdfService {
       doctorName: doctorName,
     );
 
-    await Printing.sharePdf(
-      bytes: await pdf.save(),
-      filename:
-          'prescription_${patient.fullName}_${_dateFormat.format(prescription.prescriptionDate)}.pdf',
-    );
+    final bytes = await pdf.save();
+    final filename =
+        'prescription_${patient.fullName.replaceAll(' ', '_')}_${_dateFormat.format(prescription.prescriptionDate).replaceAll('/', '-')}.pdf';
+
+    // On Linux desktop, share may not work, so save to Documents folder
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$filename');
+      await file.writeAsBytes(bytes);
+      return file.path;
+    } catch (e) {
+      // Fallback to share if file save fails
+      await Printing.sharePdf(
+        bytes: bytes,
+        filename: filename,
+      );
+      return null;
+    }
   }
 
   Future<pw.Document> _generatePrescriptionPdf({

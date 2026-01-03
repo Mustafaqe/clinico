@@ -780,18 +780,28 @@ class _PrescriptionFormScreenState extends State<PrescriptionFormScreen> {
 
       final settings = context.read<SettingsProvider>();
 
-      await _pdfService.sharePrescription(
+      final savedPath = await _pdfService.sharePrescription(
         patient: widget.patient,
         visit: visit ?? Visit(id: '', patientId: widget.patient.id),
         prescription: prescription,
         clinicName: settings.clinicName,
         doctorName: settings.doctorName,
       );
+
+      if (mounted && savedPath != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('PDF saved to: $savedPath'),
+            backgroundColor: AppTheme.successGreen,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error sharing: $e'),
+            content: Text('Error saving PDF: $e'),
             backgroundColor: AppTheme.errorRed,
           ),
         );

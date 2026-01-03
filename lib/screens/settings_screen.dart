@@ -14,13 +14,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late TextEditingController _clinicNameController;
   late TextEditingController _doctorNameController;
   bool _isSaving = false;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
-    final settings = context.read<SettingsProvider>();
-    _clinicNameController = TextEditingController(text: settings.clinicName);
-    _doctorNameController = TextEditingController(text: settings.doctorName);
+    _clinicNameController = TextEditingController();
+    _doctorNameController = TextEditingController();
+
+    // Add listeners to update the preview when text changes
+    _clinicNameController.addListener(() => setState(() {}));
+    _doctorNameController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      final settings = context.watch<SettingsProvider>();
+      _clinicNameController.text = settings.clinicName;
+      _doctorNameController.text = settings.doctorName;
+      _initialized = true;
+    }
   }
 
   @override
@@ -199,7 +214,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             backgroundColor: AppTheme.successGreen,
           ),
         );
-        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
