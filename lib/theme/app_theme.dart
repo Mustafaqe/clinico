@@ -9,7 +9,7 @@ class AppTheme {
   static const Color cardDark = Color(0xFF1E1E1E);
   static const Color cardDarkElevated = Color(0xFF2D2D2D);
   static const Color successGreen = Color(0xFF4CAF50);
-  static const Color warningOrange = Color(0xFFFF9800);
+  static const Color warningOrange = Color.fromARGB(255, 226, 8, 8);
   static const Color errorRed = Color(0xFFE53935);
   static const Color textPrimary = Color(0xFFE0E0E0);
   static const Color textSecondary = Color(0xFF9E9E9E);
@@ -159,33 +159,33 @@ class AppTheme {
 
   // Gradient decorations
   static BoxDecoration get primaryGradientDecoration => BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [primaryBlue, primaryDark],
-    ),
-    borderRadius: BorderRadius.circular(12),
-  );
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [primaryBlue, primaryDark],
+        ),
+        borderRadius: BorderRadius.circular(12),
+      );
 
   static BoxDecoration get cardDecoration => BoxDecoration(
-    color: cardDark,
-    borderRadius: BorderRadius.circular(12),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.2),
-        blurRadius: 8,
-        offset: const Offset(0, 2),
-      ),
-    ],
-  );
+        color: cardDark,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      );
 
   static BoxDecoration get accentCardDecoration => BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [accentTeal.withOpacity(0.2), primaryBlue.withOpacity(0.2)],
-    ),
-    borderRadius: BorderRadius.circular(12),
-    border: Border.all(color: accentTeal.withOpacity(0.3)),
-  );
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [accentTeal.withOpacity(0.2), primaryBlue.withOpacity(0.2)],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: accentTeal.withOpacity(0.3)),
+      );
 }
