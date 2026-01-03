@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import 'patient_detail_screen.dart';
 import 'patient_form_screen.dart';
 import 'patient_list_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -77,6 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 selectedIcon: Icon(Icons.people),
                 label: Text('Patients'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.settings_outlined),
+                selectedIcon: Icon(Icons.settings),
+                label: Text('Settings'),
+              ),
             ],
           ),
           const VerticalDivider(width: 1),
@@ -84,7 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: _selectedIndex == 0
                 ? _buildDashboard()
-                : const PatientListScreen(),
+                : _selectedIndex == 1
+                    ? const PatientListScreen()
+                    : const SettingsScreen(),
           ),
         ],
       ),
@@ -224,13 +232,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: patientProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : patientProvider.patients.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-                    itemCount: patientProvider.patients.length,
-                    itemBuilder: (context, index) {
-                      return _buildPatientCard(patientProvider.patients[index]);
-                    },
-                  ),
+                    ? _buildEmptyState()
+                    : ListView.builder(
+                        itemCount: patientProvider.patients.length,
+                        itemBuilder: (context, index) {
+                          return _buildPatientCard(
+                              patientProvider.patients[index]);
+                        },
+                      ),
           ),
         ],
       ),

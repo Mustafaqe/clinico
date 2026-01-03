@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/patient_provider.dart';
 import 'providers/visit_provider.dart';
 import 'providers/prescription_provider.dart';
+import 'providers/settings_provider.dart';
 import 'screens/home_screen.dart';
 import 'services/database_helper.dart';
 import 'theme/app_theme.dart';
@@ -27,6 +28,7 @@ class ClinicoApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PatientProvider()),
         ChangeNotifierProvider(create: (_) => VisitProvider()),
         ChangeNotifierProvider(create: (_) => PrescriptionProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
       child: MaterialApp(
         title: 'Clinico',

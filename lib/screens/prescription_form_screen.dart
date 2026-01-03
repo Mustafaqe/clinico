@@ -6,6 +6,7 @@ import '../models/visit.dart';
 import '../models/prescription.dart';
 import '../providers/prescription_provider.dart';
 import '../providers/visit_provider.dart';
+import '../providers/settings_provider.dart';
 import '../services/pdf_service.dart';
 import '../theme/app_theme.dart';
 
@@ -72,8 +73,8 @@ class _PrescriptionFormScreenState extends State<PrescriptionFormScreen> {
           widget.isViewing
               ? 'Prescription'
               : _isEditing
-              ? 'Edit Prescription'
-              : 'New Prescription',
+                  ? 'Edit Prescription'
+                  : 'New Prescription',
         ),
         actions: [
           if (widget.isViewing || _isEditing)
@@ -683,8 +684,7 @@ class _PrescriptionFormScreenState extends State<PrescriptionFormScreen> {
 
     try {
       final provider = context.read<PrescriptionProvider>();
-      final visitId =
-          widget.visit?.id ??
+      final visitId = widget.visit?.id ??
           _selectedVisit?.id ??
           widget.prescription!.visitId;
 
@@ -692,9 +692,8 @@ class _PrescriptionFormScreenState extends State<PrescriptionFormScreen> {
         final updated = widget.prescription!.copyWith(
           prescriptionDate: _prescriptionDate,
           medications: _medications,
-          additionalNotes: _notesController.text.isNotEmpty
-              ? _notesController.text
-              : null,
+          additionalNotes:
+              _notesController.text.isNotEmpty ? _notesController.text : null,
         );
         await provider.updatePrescription(updated);
       } else {
@@ -703,9 +702,8 @@ class _PrescriptionFormScreenState extends State<PrescriptionFormScreen> {
           patientId: widget.patient.id,
           prescriptionDate: _prescriptionDate,
           medications: _medications,
-          additionalNotes: _notesController.text.isNotEmpty
-              ? _notesController.text
-              : null,
+          additionalNotes:
+              _notesController.text.isNotEmpty ? _notesController.text : null,
         );
       }
 
@@ -739,16 +737,18 @@ class _PrescriptionFormScreenState extends State<PrescriptionFormScreen> {
       Visit? visit = widget.visit;
       if (visit == null) {
         visit = await context.read<VisitProvider>().getVisitById(
-          prescription.visitId,
-        );
+              prescription.visitId,
+            );
       }
+
+      final settings = context.read<SettingsProvider>();
 
       await _pdfService.printPrescription(
         patient: widget.patient,
         visit: visit ?? Visit(id: '', patientId: widget.patient.id),
         prescription: prescription,
-        clinicName: 'Medical Clinic',
-        doctorName: 'Doctor',
+        clinicName: settings.clinicName,
+        doctorName: settings.doctorName,
       );
     } catch (e) {
       if (mounted) {
@@ -774,16 +774,18 @@ class _PrescriptionFormScreenState extends State<PrescriptionFormScreen> {
       Visit? visit = widget.visit;
       if (visit == null) {
         visit = await context.read<VisitProvider>().getVisitById(
-          prescription.visitId,
-        );
+              prescription.visitId,
+            );
       }
+
+      final settings = context.read<SettingsProvider>();
 
       await _pdfService.sharePrescription(
         patient: widget.patient,
         visit: visit ?? Visit(id: '', patientId: widget.patient.id),
         prescription: prescription,
-        clinicName: 'Medical Clinic',
-        doctorName: 'Doctor',
+        clinicName: settings.clinicName,
+        doctorName: settings.doctorName,
       );
     } catch (e) {
       if (mounted) {
